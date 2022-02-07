@@ -1,5 +1,5 @@
 .personaje{
-    border-radius: 5px;
+    border-radius: 8px;
     display:flex;
     margin: 10px;
     background:#3C3E44;
@@ -22,7 +22,6 @@
 .foto{
     width:200px;
     flex:1;
-    border: 1px solid black;
 }
 
 .info{
