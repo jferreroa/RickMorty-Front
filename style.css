@@ -1,0 +1,42 @@
+.personaje{
+    border-radius: 5px;
+    display:flex;
+    margin: 10px;
+    background:#3C3E44;
+    width:450px;
+    height:200px;
+    border: 1px solid black
+}
+
+
+.container{
+    border-radius: 5px;
+    background: #24282F;
+    border: 1px solid black;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    height: auto;
+}
+
+.foto{
+    width:200px;
+    flex:1;
+    border: 1px solid black;
+}
+
+.info{
+    border-radius: 5px;
+    width:250px;
+    border: 1px solid black;
+    margin-left:10px;
+    margin-right:10px;
+    margin-bottom:10px;
+    margin-top:7px;
+}
+.logo{
+    top:0px;
+    left:30%;
+    transform: translate(50%,50%);
+}
+
