@@ -1,64 +1,43 @@
+let arrpersonajes = [];
+
 const leerPersonajes = async (link) => {
-    const a = await fetch("https://rickandmortyapi.com/api/character/36,6,7,10,20")
+    if (!link) {
+        return
+    }
+    const a = await fetch(link)
     const b = await (a.json())
     console.log(b)
-    if(b.results && a){
+    if (b.results && a) {
         return b.results;
-    }else if(a){
+    } else if (a) {
+        arrpersonajes = b
         return b
     }
 }
-let x = 0;
-const crearInfoPersonaje = async (datosPersonaje) => {
-    const info = document.querySelectorAll(".info")
-    
-    let nombre = document.createElement("div")
-    let specie = document.createElement("div")
-    let location = document.createElement("div")
-    let firstEpisode = document.createElement("div")
-    const realEpisode = await fetch(datosPersonaje.episode)
-    const b = await realEpisode.json()
-    nombre.innerHTML = datosPersonaje.name
-    
-    if(datosPersonaje.status == "Alive"){
-        specie.innerHTML = "&#128154" + datosPersonaje.status + " - " + datosPersonaje.species
 
-    }else if(datosPersonaje.status == "Dead"){
-        specie.innerHTML = "&#128148" + datosPersonaje.status + " - " + datosPersonaje.species
-        
-    }else{
-        specie.innerHTML = "&#128161" + datosPersonaje.status + " - " + datosPersonaje.species
-    }
-    
-    
-    
-    location.innerHTML = "Last known location:\n" + datosPersonaje.location
-    firstEpisode.innerHTML = "First seen in:\n" +  b.name
-    console.log(b.name)
-    info[x].appendChild(nombre)
-    info[x].appendChild(specie)
-    info[x].appendChild(location)
-    info[x].appendChild(firstEpisode)
-
-    x++
+let urlA = ""
+const getUrl = () => {
+    let url = document.querySelector(".input").value;
+    urlA = url 
 }
 
-const crearCuadroPersonaje = async (elem) => {
+
+const crearCuadroPersonaje = async(elem) => {
     const linkFoto = elem.image
-    let datosPersonaje = {
+    let a = {
         name: elem.name,
         status: elem.status,
         species: elem.species,
         location: elem.location.name,
         episode: elem.episode[0]
     }
-    console.log(datosPersonaje.name)
-    console.log(linkFoto)
+
+    let datosPersonaje = a
     const container = document.querySelector(".container")
     let personaje = document.createElement("div")
     personaje.className = "personaje"
     let foto = document.createElement("img")
-    foto.className ="foto"
+    foto.className = "foto"
     foto.src = linkFoto
     //foto.setAttribute('url', 'linkFoto')
     let info = document.createElement("div")
@@ -67,18 +46,57 @@ const crearCuadroPersonaje = async (elem) => {
     personaje.appendChild(foto)
     personaje.appendChild(info)
 
-    await crearInfoPersonaje(datosPersonaje)
+    //await crearInfoPersonaje(datosPersonaje)
+    //Promise.resolve( crearInfoPersonaje(datosPersonaje))
+    //const info = document.querySelectorAll(".info")
+
+    let specie = document.createElement("div")
+    let location = document.createElement("div")
+    let firstEpisode = document.createElement("div")
+    let nombre = document.createElement("div")
+
+    const realEpisode = await fetch(datosPersonaje.episode)
+    const b = await realEpisode.json()
+    if (datosPersonaje.status == "Alive") {
+        specie.innerHTML = "&#128154" + datosPersonaje.status + " - " + datosPersonaje.species
+
+    } else if (datosPersonaje.status == "Dead") {
+        specie.innerHTML = "&#128148" + datosPersonaje.status + " - " + datosPersonaje.species
+
+    } else {
+        specie.innerHTML = "&#128161" + datosPersonaje.status + " - " + datosPersonaje.species
+    }
+    location.innerHTML = "Last known location:\n" + datosPersonaje.location
+    firstEpisode.innerHTML = "First seen in:\n" + b.name
+    nombre.innerHTML = "-"+datosPersonaje.name
+
+    info.appendChild(nombre)
+    info.appendChild(specie)
+    info.appendChild(location)
+    info.appendChild(firstEpisode)
+
 }
 
-window.onload = async () => {
-    const arrpersonajes = await leerPersonajes()
-    console.log(arrpersonajes.length)
-    if(arrpersonajes.length == undefined) {
-        crearCuadroPersonaje(arrpersonajes)
-    }else{
-        arrpersonajes.forEach(person => {
-            crearCuadroPersonaje(person)
-        })
-    }
+window.onload = () => {
+    const input =setInterval(async () => {
+        getUrl()
+        console.log("interval")
+        const arrpersonajes = await leerPersonajes(urlA)
+        if (arrpersonajes) {
+            console.log("arrpersonajes")
+            if (arrpersonajes.length == undefined) {
+                 crearCuadroPersonaje(arrpersonajes)
+                clearInterval(input)
+            } else {
+                arrpersonajes.forEach(async person => {
+                     Promise.resolve( crearCuadroPersonaje(person))
+                })
+                clearInterval(input)
+            }
+        }
+
+    }, 500)
+
+
 
 }
