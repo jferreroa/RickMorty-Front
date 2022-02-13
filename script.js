@@ -78,6 +78,7 @@ const crearCuadroPersonaje = async(elem) => {
 }
 
 window.onload = () => {
+    console.log(parseInt(window.innerWidth))
     const input =setInterval(async () => {
         getUrl()
         console.log("interval")
